@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2, Bot } from 'lucide-react';
 import MessageBubble from '../components/MessageBubble';
 import WelcomeBlocks from '../components/WelcomeBlocks';
 import CollapsibleChips from '../components/CollapsibleChips';
@@ -180,7 +180,7 @@ const Chat = () => {
             {isLoading && (
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-8 h-8 bg-surface-secondary rounded-full flex items-center justify-center border border-itau-orange/30">
-                  <Loader2 size={16} className="text-itau-orange animate-spin" />
+                  <Bot size={16} className="text-itau-orange" />
                 </div>
                 <div className="bg-surface-secondary rounded-2xl px-4 py-3">
                   <div className="flex items-center space-x-2">

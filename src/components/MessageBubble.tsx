@@ -43,14 +43,10 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
         </div>
         <div className="flex-1">
           <div className="message-bubble-ai">
-            <div className="text-sm leading-relaxed">
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                rehypePlugins={[rehypeRaw]}
-              >
-                {message.text}
-              </ReactMarkdown>
-            </div>
+            <div
+              className="text-sm leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: message.text }}
+            />
           </div>
           <span className="text-xs text-muted-foreground ml-1 mt-1 block">
             {formatTime(message.timestamp)}

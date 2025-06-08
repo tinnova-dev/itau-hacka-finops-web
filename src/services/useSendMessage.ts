@@ -9,7 +9,7 @@ export interface AIResponse {
 export function useSendMessage() {
   return useMutation<AIResponse, Error, { chatId: string, message: string }>({
     mutationFn: async ({ chatId, message }) => {
-      const response = await api.post('/message', { chat_id: chatId, content: message });
+      const response = await api.post('/api/message', { chat_id: chatId, content: message });
       return response.data;
     }
   });
