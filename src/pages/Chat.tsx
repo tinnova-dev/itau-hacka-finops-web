@@ -13,6 +13,15 @@ interface Message {
   type?: 'cost' | 'alert' | 'insight' | 'dashboard';
 }
 
+const getOrCreateChatId = () => {
+  let chatId = localStorage.getItem('chatId');
+  if (!chatId) {
+    chatId = Date.now().toString() + Math.floor(Math.random() * 10000).toString();
+    localStorage.setItem('chatId', chatId);
+  }
+  return chatId;
+};
+
 const Chat = () => {
   const saved = localStorage.getItem('chatMessages');
   let initialMessages: Message[] = [];
@@ -28,17 +37,11 @@ const Chat = () => {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [hasStartedChat, setHasStartedChat] = useState(initialMessages.length > 0);
+  const [chatId, setChatId] = useState(() => getOrCreateChatId());
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { mutate: sendMessage, isPending } = useSendMessage();
-
-  const getPreviousTexts = () => {
-    return messages
-      .filter((msg) => !msg.isAI)
-      .map((msg) => msg.text)
-      .join(' - ');
-  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -66,13 +69,8 @@ const Chat = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue('');
 
-    const previousTexts = getPreviousTexts();
-    const context = previousTexts
-      ? `messageHistory: ${previousTexts}\n---\nnewMessage: ${message}`
-      : `newMessage: ${message}`;
-
     sendMessage(
-      { message: context },
+      { chatId, message },
       {
         onSuccess: (data) => {
           const aiMessage: Message = {
@@ -105,49 +103,27 @@ const Chat = () => {
     inputRef.current?.focus();
   };
 
+  const handleNewChat = () => {
+    localStorage.removeItem('chatMessages');
+    const newChatId = Date.now().toString() + Math.floor(Math.random() * 10000).toString();
+    localStorage.setItem('chatId', newChatId);
+    setChatId(newChatId);
+    setMessages([]);
+    setInputValue('');
+    setHasStartedChat(false);
+  };
+
   return (
     <div className="max-w-4xl mx-auto h-full flex flex-col relative pt-12">
       {/* New Chat Button */}
-      <div style={{ position: 'fixed', top: 70, left: 270, zIndex: 40 }}>
-        <button
-          onClick={() => {
-            localStorage.removeItem('chatMessages');
-            setMessages([]);
-            setInputValue('');
-            setHasStartedChat(false);
-          }}
-          className="bg-itau-orange text-white rounded-full shadow hover:bg-itau-orange-hover transition-all w-10 h-10 flex items-center justify-center"
-          onMouseEnter={e => {
-            const tooltip = document.createElement('div');
-            tooltip.innerText = 'Novo Chat';
-            tooltip.id = 'custom-tooltip';
-            tooltip.style.position = 'fixed';
-            tooltip.style.top = `${e.clientY + 8}px`;
-            tooltip.style.left = `${e.clientX + 8}px`;
-            tooltip.style.background = 'rgba(0,0,0,0.8)';
-            tooltip.style.color = '#fff';
-            tooltip.style.padding = '4px 10px';
-            tooltip.style.borderRadius = '6px';
-            tooltip.style.fontSize = '13px';
-            tooltip.style.pointerEvents = 'none';
-            tooltip.style.zIndex = '9999';
-            document.body.appendChild(tooltip);
-          }}
-          onMouseMove={e => {
-            const tooltip = document.getElementById('custom-tooltip');
-            if (tooltip) {
-              tooltip.style.top = `${e.clientY + 8}px`;
-              tooltip.style.left = `${e.clientX + 8}px`;
-            }
-          }}
-          onMouseLeave={() => {
-            const tooltip = document.getElementById('custom-tooltip');
-            if (tooltip) tooltip.remove();
-          }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v14m7-7H5"/></svg>
-        </button>
-      </div>
+      <button
+        style={{ position: 'fixed', top: 70, left: 270, zIndex: 40, width: 40, height: 40, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        onClick={handleNewChat}
+        className="bg-itau-orange text-white rounded-full shadow hover:bg-itau-orange-hover transition-all"
+        title="Novo Chat"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v14m7-7H5"/></svg>
+      </button>
       {/* Welcome State */}
       {!hasStartedChat && (
         <div className="flex-1 flex flex-col justify-center px-6 py-12">

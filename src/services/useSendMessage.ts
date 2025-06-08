@@ -7,11 +7,12 @@ export interface AIResponse {
 }
 
 export function useSendMessage() {
-  return useMutation<AIResponse, Error, { message: string }>({
-    mutationFn: async ({ message }) => {
+  return useMutation<AIResponse, Error, { chatId: string, message: string }>({
+    mutationFn: async ({ chatId, message }) => {
+      console.log('chat id:', chatId);
       console.log('Sending message to AI:', message);
       // TODO: Replace this mock with real API call when backend is ready
-      // const response = await api.post('/chat', { message });
+      // const response = await api.post('/chat', { chatId, message });
       // return response.data;
 
       // Simulated mock
