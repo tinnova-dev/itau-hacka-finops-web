@@ -1,0 +1,131 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design system for Itaú FinOps Chat Interface */
+
+@layer base {
+  :root {
+    /* Itaú FinOps Color Palette */
+    --background: 0 0% 17.3%; /* #2C2C2C - Dark-clean principal */
+    --surface-primary: 0 0% 22.7%; /* #3A3A3A - Cards e balões */
+    --surface-secondary: 0 0% 30.2%; /* #4D4D4D - Superfícies elevadas */
+    --foreground: 0 0% 89.8%; /* #E5E5E5 - Texto principal */
+    --foreground-muted: 0 0% 70%; /* Texto secundário */
+    --itau-orange: 25 100% 50%; /* #FF6A00 - Accent Itaú */
+    --itau-orange-hover: 22 100% 45%; /* #E85C00 - Hover state */
+    
+    /* Updated shadcn tokens */
+    --card: 0 0% 22.7%;
+    --card-foreground: 0 0% 89.8%;
+    --popover: 0 0% 22.7%;
+    --popover-foreground: 0 0% 89.8%;
+    --primary: 25 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 30.2%;
+    --secondary-foreground: 0 0% 89.8%;
+    --muted: 0 0% 30.2%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 25 100% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 30.2%;
+    --input: 0 0% 30.2%;
+    --ring: 25 100% 50%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* Custom scrollbar for dark theme */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--surface-secondary));
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--itau-orange));
+  }
+}
+
+@layer components {
+  /* Chip components for suggestions */
+  .chip {
+    @apply inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200;
+    @apply bg-surface-secondary text-foreground hover:bg-itau-orange hover:text-white cursor-pointer;
+    @apply border border-transparent hover:border-itau-orange;
+  }
+
+  /* Message bubbles */
+  .message-bubble-user {
+    @apply bg-surface-primary text-foreground rounded-2xl px-4 py-3 max-w-[80%] ml-auto;
+  }
+
+  .message-bubble-ai {
+    @apply bg-surface-secondary text-foreground rounded-2xl px-4 py-3 max-w-[80%] mr-auto;
+    border: 1px solid hsl(var(--itau-orange) / 0.3);
+  }
+
+  /* Itaú brand elements */
+  .itau-gradient {
+    background: linear-gradient(135deg, hsl(var(--itau-orange)) 0%, hsl(var(--itau-orange-hover)) 100%);
+  }
+
+  /* Hover effects */
+  .hover-glow:hover {
+    box-shadow: 0 0 20px hsl(var(--itau-orange) / 0.3);
+  }
+}
+
+@layer utilities {
+  .text-surface-primary {
+    color: hsl(var(--surface-primary));
+  }
+  
+  .text-surface-secondary {
+    color: hsl(var(--surface-secondary));
+  }
+  
+  .bg-surface-primary {
+    background-color: hsl(var(--surface-primary));
+  }
+  
+  .bg-surface-secondary {
+    background-color: hsl(var(--surface-secondary));
+  }
+  
+  .text-itau-orange {
+    color: hsl(var(--itau-orange));
+  }
+  
+  .bg-itau-orange {
+    background-color: hsl(var(--itau-orange));
+  }
+  
+  .border-itau-orange {
+    border-color: hsl(var(--itau-orange));
+  }
+  
+  .hover\:bg-itau-orange-hover:hover {
+    background-color: hsl(var(--itau-orange-hover));
+  }
+}
