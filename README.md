@@ -34,6 +34,27 @@ npm run dev
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
 
+## Deployment to AWS ECS
+
+This project is configured to automatically build, push, and deploy to Amazon ECS when changes are pushed to the main branch.
+
+### Deployment Process
+
+1. When code is pushed to the main branch, a GitHub Actions workflow is triggered
+2. The workflow builds a Docker image of the application
+3. The image is pushed to Amazon ECR (Elastic Container Registry)
+4. The application is deployed to Amazon ECS (Elastic Container Service)
+
+### Deployment Files
+
+- `Dockerfile` - Defines how the application is containerized
+- `.github/workflows/deploy.yml` - GitHub Actions workflow for CI/CD
+- `.aws/task-definition.json` - ECS task definition
+
+### Manual Deployment
+
+You can also manually trigger the deployment workflow from the GitHub Actions tab by clicking "Run workflow".
+
 ## What technologies are used for this project?
 
 This project is built with:
@@ -43,3 +64,6 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+- Docker
+- GitHub Actions
+- AWS ECS
