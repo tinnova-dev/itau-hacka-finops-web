@@ -56,6 +56,7 @@ const Chat = () => {
 
   const handleSubmit = (message: string) => {
     if (!message.trim() || isPending) return;
+    setIsLoading(true);
 
     if (!hasStartedChat) {
       setHasStartedChat(true);
@@ -188,7 +189,6 @@ const Chat = () => {
                       <div className="w-2 h-2 bg-itau-orange rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                       <div className="w-2 h-2 bg-itau-orange rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                     </div>
-                    <span className="text-sm text-muted-foreground">Analisando dados...</span>
                   </div>
                 </div>
               </div>
