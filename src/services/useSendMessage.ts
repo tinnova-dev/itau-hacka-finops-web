@@ -26,7 +26,7 @@ export function useSendMessage() {
 
       if (lowerMessage.includes('alerta') || lowerMessage.includes('alert')) {
         return {
-          text: '⚠️ **Alerta Ativo:**\n\nGasto do serviço S3 ultrapassou 15% da meta mensal!\n\n- **Atual:** R$ 3.750\n- **Meta:** R$ 3.200\n\n_Recomendo revisar políticas de lifecycle e storage classes._',
+          text: '<b style="color:#e63946;">⚠️ Alerta Ativo:</b><br/><span style="font-weight:600;">Gasto do serviço <span style="color:#f77f00;">S3</span> ultrapassou <u>15% da meta mensal</u>!</span><ul><li><b>Atual:</b> <span style="color:#457b9d;">R$ 3.750</span></li><li><b>Meta:</b> <span style="color:#2a9d8f;">R$ 3.200</span></li></ul><i>Recomendo revisar políticas de lifecycle e storage classes.</i>',
           type: 'alert'
         };
       }
