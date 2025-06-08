@@ -2,52 +2,15 @@ import { useMutation } from '@tanstack/react-query';
 import api from '@/lib/api';
 
 export interface AIResponse {
-  text: string;
+  content: string;
   type?: 'cost' | 'alert' | 'insight' | 'dashboard';
 }
 
 export function useSendMessage() {
   return useMutation<AIResponse, Error, { chatId: string, message: string }>({
     mutationFn: async ({ chatId, message }) => {
-      // TODO: Replace this mock with real API call when backend is ready
-      // const response = await api.post('/chat', { chatId, message });
-      // return response.data;
-
-      // Simulated mock
-      const lowerMessage = message.toLowerCase();
-
-      if (lowerMessage.includes('custo') || lowerMessage.includes('gasto')) {
-        return {
-          text: '**Seu custo total em nuvem neste mês é _R$ 12.500_**\n\n' +
-            '| Serviço | Valor   | Percentual |\n|---------|---------|------------|\n| EC2     | R$5000  | 40%        |\n| S3      | R$3750  | 30%        |\n| Lambda  | R$1875  | 15%        |',
-          type: 'cost'
-        };
-      }
-
-      if (lowerMessage.includes('alerta') || lowerMessage.includes('alert')) {
-        return {
-          text: '<b style="color:#e63946;">⚠️ Alerta Ativo:</b><br/><span style="font-weight:600;">Gasto do serviço <span style="color:#f77f00;">S3</span> ultrapassou <u>15% da meta mensal</u>!</span><ul><li><b>Atual:</b> <span style="color:#457b9d;">R$ 3.750</span></li><li><b>Meta:</b> <span style="color:#2a9d8f;">R$ 3.200</span></li></ul><i>Recomendo revisar políticas de lifecycle e storage classes.</i>',
-          type: 'alert'
-        };
-      }
-
-      if (lowerMessage.includes('uso') || lowerMessage.includes('recurso')) {
-        return {
-          text: '📈 **Uso de CPU médio:** 85% em 3 nós do cluster principal.\n\n**Memória:** 72%\n\n_Recomendo considerar auto-scaling ou otimização de workloads para melhor eficiência._',
-          type: 'insight'
-        };
-      }
-
-      if (lowerMessage.includes('dashboard') || lowerMessage.includes('kpi')) {
-        return {
-          text: '### Principais KPIs de FinOps\n\n- **Cost per Transaction:** `R$ 0,23`\n- **Cloud Efficiency:** 78%\n- **Budget Variance:** +8%\n- **Resource Utilization:** 82%\n\nDashboards ativos: _Cost Management_, _Performance Monitoring_.',
-          type: 'dashboard'
-        };
-      }
-
-      return {
-        text: 'Entendi sua solicitação!\n\nPosso ajudar com **análise de custos**, _alertas de performance_, otimização de recursos ou visualização de KPIs.\n\nO que gostaria de explorar primeiro?',
-      };
+      const response = await api.post('/message', { chat_id: chatId, content: message });
+      return response.data;
     }
   });
 }

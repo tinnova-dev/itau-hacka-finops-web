@@ -38,6 +38,8 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasStartedChat, setHasStartedChat] = useState(initialMessages.length > 0);
   const [chatId, setChatId] = useState(() => getOrCreateChatId());
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [lastUserMessage, setLastUserMessage] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -68,6 +70,8 @@ const Chat = () => {
 
     setMessages((prev) => [...prev, userMessage]);
     setInputValue('');
+    setLastUserMessage(message);
+    setErrorMessage(null);
 
     sendMessage(
       { chatId, message },
@@ -75,12 +79,15 @@ const Chat = () => {
         onSuccess: (data) => {
           const aiMessage: Message = {
             id: (Date.now() + 1).toString(),
-            text: data.text,
+            text: data.content,
             isAI: true,
             timestamp: new Date(),
             type: data.type,
           };
           setMessages((prev) => [...prev, aiMessage]);
+        },
+        onError: () => {
+          setErrorMessage('Ocorreu um erro ao enviar a mensagem.');
         },
         onSettled: () => {
           setIsLoading(false);
@@ -111,6 +118,12 @@ const Chat = () => {
     setMessages([]);
     setInputValue('');
     setHasStartedChat(false);
+  };
+
+  const handleTryAgain = () => {
+    if (lastUserMessage) {
+      handleSubmit(lastUserMessage);
+    }
   };
 
   return (
@@ -147,6 +160,21 @@ const Chat = () => {
             {messages.map((message) => (
               <MessageBubble key={message.id} message={message} />
             ))}
+            {errorMessage && (
+              <div className="flex items-start space-x-3 mb-4">
+                <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center border border-red-400/30">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="#ef4444" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div className="flex-1">
+                  <div className="bg-red-100 border border-red-300 text-red-700 rounded-2xl px-4 py-3">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-semibold">{errorMessage}</span>
+                      <button onClick={handleTryAgain} className="ml-2 px-2 py-1 bg-red-200 hover:bg-red-300 text-red-800 rounded transition-all text-xs font-medium">Tentar novamente</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
             
             {isLoading && (
               <div className="flex items-center space-x-3 mb-4">
