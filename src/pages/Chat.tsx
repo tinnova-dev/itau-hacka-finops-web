@@ -33,6 +33,13 @@ const Chat = () => {
 
   const { mutate: sendMessage, isPending } = useSendMessage();
 
+  const getPreviousTexts = () => {
+    return messages
+      .filter((msg) => !msg.isAI)
+      .map((msg) => msg.text)
+      .join(' - ');
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -59,8 +66,13 @@ const Chat = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue('');
 
+    const previousTexts = getPreviousTexts();
+    const context = previousTexts
+      ? `messageHistory: ${previousTexts}\n---\nnewMessage: ${message}`
+      : `newMessage: ${message}`;
+
     sendMessage(
-      { message },
+      { message: context },
       {
         onSuccess: (data) => {
           const aiMessage: Message = {
