@@ -9,8 +9,6 @@ export interface AIResponse {
 export function useSendMessage() {
   return useMutation<AIResponse, Error, { chatId: string, message: string }>({
     mutationFn: async ({ chatId, message }) => {
-      console.log('chat id:', chatId);
-      console.log('Sending message to AI:', message);
       // TODO: Replace this mock with real API call when backend is ready
       // const response = await api.post('/chat', { chatId, message });
       // return response.data;
@@ -20,34 +18,35 @@ export function useSendMessage() {
 
       if (lowerMessage.includes('custo') || lowerMessage.includes('gasto')) {
         return {
-          text: 'Seu custo total em nuvem neste mês é R$ 12.500. Principais serviços: EC2 (40%), S3 (30%), Lambda (15%). Comparado ao mês anterior, houve um aumento de 8% principalmente devido ao maior uso de instâncias EC2.',
+          text: '**Seu custo total em nuvem neste mês é _R$ 12.500_**\n\n' +
+            '| Serviço | Valor   | Percentual |\n|---------|---------|------------|\n| EC2     | R$5000  | 40%        |\n| S3      | R$3750  | 30%        |\n| Lambda  | R$1875  | 15%        |',
           type: 'cost'
         };
       }
 
       if (lowerMessage.includes('alerta') || lowerMessage.includes('alert')) {
         return {
-          text: '⚠️ Alerta Ativo: Gasto do serviço S3 ultrapassou 15% da meta mensal! Atual: R$ 3.750 | Meta: R$ 3.200. Recomendo revisar políticas de lifecycle e storage classes.',
+          text: '⚠️ **Alerta Ativo:**\n\nGasto do serviço S3 ultrapassou 15% da meta mensal!\n\n- **Atual:** R$ 3.750\n- **Meta:** R$ 3.200\n\n_Recomendo revisar políticas de lifecycle e storage classes._',
           type: 'alert'
         };
       }
 
       if (lowerMessage.includes('uso') || lowerMessage.includes('recurso')) {
         return {
-          text: '📈 Uso de CPU médio está em 85% em 3 nós do cluster principal. Memória em 72%. Recomendo considerar auto-scaling ou otimização de workloads para melhor eficiência.',
+          text: '📈 **Uso de CPU médio:** 85% em 3 nós do cluster principal.\n\n**Memória:** 72%\n\n_Recomendo considerar auto-scaling ou otimização de workloads para melhor eficiência._',
           type: 'insight'
         };
       }
 
       if (lowerMessage.includes('dashboard') || lowerMessage.includes('kpi')) {
         return {
-          text: '📊 Principais KPIs de FinOps: Cost per Transaction: R$ 0,23 | Cloud Efficiency: 78% | Budget Variance: +8% | Resource Utilization: 82%. Dashboards ativos: Cost Management, Performance Monitoring.',
+          text: '### Principais KPIs de FinOps\n\n- **Cost per Transaction:** `R$ 0,23`\n- **Cloud Efficiency:** 78%\n- **Budget Variance:** +8%\n- **Resource Utilization:** 82%\n\nDashboards ativos: _Cost Management_, _Performance Monitoring_.',
           type: 'dashboard'
         };
       }
 
       return {
-        text: 'Entendi sua solicitação! Posso ajudar com análise de custos, alertas de performance, otimização de recursos ou visualização de KPIs. O que gostaria de explorar primeiro?'
+        text: 'Entendi sua solicitação!\n\nPosso ajudar com **análise de custos**, _alertas de performance_, otimização de recursos ou visualização de KPIs.\n\nO que gostaria de explorar primeiro?',
       };
     }
   });
