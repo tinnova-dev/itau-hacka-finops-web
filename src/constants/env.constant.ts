@@ -1,1 +1,1 @@
-export const HACKTHON_PUBLIC_API_URL = import.meta.env.VITE_HACKTHON_PUBLIC_API_URL;
+export const VITE_HACKTHON_PUBLIC_API_URL = import.meta.env.VITE_HACKTHON_PUBLIC_API_URL;

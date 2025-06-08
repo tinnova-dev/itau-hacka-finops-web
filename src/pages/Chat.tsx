@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2, Bot } from 'lucide-react';
 import MessageBubble from '../components/MessageBubble';
 import WelcomeBlocks from '../components/WelcomeBlocks';
 import CollapsibleChips from '../components/CollapsibleChips';
@@ -129,15 +129,6 @@ const Chat = () => {
 
   return (
     <div className="max-w-4xl mx-auto h-full flex flex-col relative pt-12">
-      {/* New Chat Button */}
-      <button
-        style={{ position: 'fixed', top: 70, left: 270, zIndex: 40, width: 40, height: 40, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        onClick={handleNewChat}
-        className="bg-itau-orange text-white rounded-full shadow hover:bg-itau-orange-hover transition-all"
-        title="Novo Chat"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v14m7-7H5"/></svg>
-      </button>
       {/* Welcome State */}
       {!hasStartedChat && (
         <div className="flex-1 flex flex-col justify-center px-6 py-12">
@@ -180,7 +171,7 @@ const Chat = () => {
             {isLoading && (
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-8 h-8 bg-surface-secondary rounded-full flex items-center justify-center border border-itau-orange/30">
-                  <Loader2 size={16} className="text-itau-orange animate-spin" />
+                  <Bot size={16} className="text-itau-orange" />
                 </div>
                 <div className="bg-surface-secondary rounded-2xl px-4 py-3">
                   <div className="flex items-center space-x-2">
@@ -199,8 +190,19 @@ const Chat = () => {
         </div>
       )}
 
-      {/* Chips (can be outside of scroll area) */}
-      {hasStartedChat && <CollapsibleChips onChipClick={handleChipClick} />}
+      {/* New Chat Button and Chips */}
+      {hasStartedChat && (
+        <div className="fixed bottom-36 right-4 z-20 flex flex-col items-end gap-2">
+          <button
+            onClick={handleNewChat}
+            className="w-12 h-12 mb-2 bg-itau-orange hover:bg-itau-orange-hover text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover-glow"
+            title="Novo Chat"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v14m7-7H5"/></svg>
+          </button>
+          <CollapsibleChips onChipClick={handleChipClick} />
+        </div>
+      )}
 
       {/* Input area */}
       <form onSubmit={handleFormSubmit} className="p-4 border-t border-border bg-background sticky bottom-0">
