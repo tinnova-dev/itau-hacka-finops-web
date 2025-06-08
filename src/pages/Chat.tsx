@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 import MessageBubble from '../components/MessageBubble';
@@ -15,10 +14,20 @@ interface Message {
 }
 
 const Chat = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const saved = localStorage.getItem('chatMessages');
+  let initialMessages: Message[] = [];
+  if (saved) {
+    try {
+      const parsed: Message[] = JSON.parse(saved);
+      initialMessages = parsed.map((msg) => ({ ...msg, timestamp: new Date(msg.timestamp) }));
+    } catch {
+      initialMessages = [];
+    }
+  }
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [hasStartedChat, setHasStartedChat] = useState(false);
+  const [hasStartedChat, setHasStartedChat] = useState(initialMessages.length > 0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -30,6 +39,7 @@ const Chat = () => {
 
   useEffect(() => {
     scrollToBottom();
+    localStorage.setItem('chatMessages', JSON.stringify(messages));
   }, [messages]);
 
   const handleSubmit = (message: string) => {
@@ -85,6 +95,47 @@ const Chat = () => {
 
   return (
     <div className="max-w-4xl mx-auto h-full flex flex-col relative pt-12">
+      {/* New Chat Button */}
+      <div style={{ position: 'fixed', top: 70, left: 270, zIndex: 40 }}>
+        <button
+          onClick={() => {
+            localStorage.removeItem('chatMessages');
+            setMessages([]);
+            setInputValue('');
+            setHasStartedChat(false);
+          }}
+          className="bg-itau-orange text-white rounded-full shadow hover:bg-itau-orange-hover transition-all w-10 h-10 flex items-center justify-center"
+          onMouseEnter={e => {
+            const tooltip = document.createElement('div');
+            tooltip.innerText = 'Novo Chat';
+            tooltip.id = 'custom-tooltip';
+            tooltip.style.position = 'fixed';
+            tooltip.style.top = `${e.clientY + 8}px`;
+            tooltip.style.left = `${e.clientX + 8}px`;
+            tooltip.style.background = 'rgba(0,0,0,0.8)';
+            tooltip.style.color = '#fff';
+            tooltip.style.padding = '4px 10px';
+            tooltip.style.borderRadius = '6px';
+            tooltip.style.fontSize = '13px';
+            tooltip.style.pointerEvents = 'none';
+            tooltip.style.zIndex = '9999';
+            document.body.appendChild(tooltip);
+          }}
+          onMouseMove={e => {
+            const tooltip = document.getElementById('custom-tooltip');
+            if (tooltip) {
+              tooltip.style.top = `${e.clientY + 8}px`;
+              tooltip.style.left = `${e.clientX + 8}px`;
+            }
+          }}
+          onMouseLeave={() => {
+            const tooltip = document.getElementById('custom-tooltip');
+            if (tooltip) tooltip.remove();
+          }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v14m7-7H5"/></svg>
+        </button>
+      </div>
       {/* Welcome State */}
       {!hasStartedChat && (
         <div className="flex-1 flex flex-col justify-center px-6 py-12">
